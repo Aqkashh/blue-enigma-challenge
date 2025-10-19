@@ -89,7 +89,12 @@ def build_prompt(user_query, pinecone_matches, graph_facts):
     system = (
         "You are a helpful travel assistant. Use the provided semantic search results "
         "and graph facts to answer the user's query briefly and concisely. "
-        "Cite node ids when referencing specific places or attractions."
+        "\n\n**Instructions:**\n"
+        "- Do not mention 'context', 'semantic matches', or 'graph facts' in your answer. "
+        "- **Crucially:** When you mention a place (like an attraction, hotel, or city), "
+        "  use its full 'name' (e.g., 'Da Lat Flower Gardens'). "
+        "- **Do not** use the place's 'id' (e.g., 'Attraction 250'). "
+        "- Be friendly, clear, and structure the answer logically."
     )
 
     vec_context = []
@@ -109,10 +114,14 @@ def build_prompt(user_query, pinecone_matches, graph_facts):
     prompt = [
         {"role": "system", "content": system},
         {"role": "user", "content":
-         f"User query: {user_query}\n\n"
+         
+         f"Here is all the context I've gathered to help you:\n\n"
          "Top semantic matches (from vector DB):\n" + "\n".join(vec_context[:10]) + "\n\n"
          "Graph facts (neighboring relations):\n" + "\n".join(graph_context[:20]) + "\n\n"
-         "Based on the above, answer the user's question. If helpful, suggest 2–3 concrete itinerary steps or tips and mention node ids for references."}
+         f"User query: {user_query}\n\n"
+        "Based on the context and the user query, please provide your answer. "
+         "Remember to follow all instructions from the system role (especially using names, not IDs)."
+        }
     ]
     return prompt
 

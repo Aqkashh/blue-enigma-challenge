@@ -1,7 +1,15 @@
 neo4j
 openai
-pinecone-client
+pinecone
 pyvis
 networkx
 tqdm
 python-dotenv
+
+
+# Langchain 
+
+langchain
+langchain-openai
+langchain-pinecone
+langchain-neo4j
